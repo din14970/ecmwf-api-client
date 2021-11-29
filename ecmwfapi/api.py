@@ -559,7 +559,14 @@ class APIRequest(object):
 
 
 class ECMWFDataServer(object):
-    def __init__(self, url=None, key=None, email=None, verbose=False, log=None):
+    def __init__(
+        self,
+        url=None,
+        key=None,
+        email=None,
+        verbose=False,
+        logger=None
+    ):
         if url is None or key is None or email is None:
             key, url, email = get_apikey_values()
 
@@ -567,11 +574,11 @@ class ECMWFDataServer(object):
         self.key = key
         self.email = email
         self.verbose = verbose
-        self.log = log
+        self._logger = logger
 
-    def trace(self, m):
-        if self.log:
-            self.log(m)
+    def log(self, m):
+        if self._logger:
+            self._logger.log(m)
         else:
             t = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
             print(
@@ -590,7 +597,7 @@ class ECMWFDataServer(object):
             "datasets/%s" % (dataset,),
             self.email,
             self.key,
-            self.trace,
+            self.log,
             verbose=self.verbose,
         )
         c.execute(req, target)
@@ -607,7 +614,7 @@ class ECMWFService(object):
         key=None,
         email=None,
         verbose=False,
-        log=None,
+        logger=None,
         quiet=False,
     ):
         if url is None or key is None or email is None:
@@ -619,11 +626,11 @@ class ECMWFService(object):
         self.email = email
         self.verbose = verbose
         self.quiet = quiet
-        self.log = log
+        self._logger = logger
 
-    def trace(self, m):
-        if self.log:
-            self.log(m)
+    def log(self, m):
+        if self._logger:
+            self._logger.log(m)
         else:
             t = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
             print(
@@ -640,7 +647,7 @@ class ECMWFService(object):
             "services/%s" % (self.service,),
             self.email,
             self.key,
-            self.trace,
+            self.log,
             verbose=self.verbose,
             quiet=self.quiet,
         )
