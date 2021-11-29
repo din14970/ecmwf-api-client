@@ -12,6 +12,7 @@ from __future__ import print_function
 
 import json
 import os
+import logging
 import sys
 import time
 import traceback
@@ -630,7 +631,7 @@ class ECMWFService(object):
 
     def log(self, m):
         if self._logger:
-            self._logger.log(m)
+            self._logger.log(logging.INFO, m)
         else:
             t = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
             print(
